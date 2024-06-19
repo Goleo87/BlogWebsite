@@ -31,15 +31,7 @@ const userSchema = new Schema({
     default: "user",
     enum: ["user", "admin"]
   },
-  articles: {
-    type: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Article" // Ensure this matches your actual Article model name
-      }
-    ],
-    default: []
-  },
+ 
 });
 
 // Middleware to hash password before saving user to database

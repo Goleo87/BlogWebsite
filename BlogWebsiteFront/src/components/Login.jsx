@@ -10,10 +10,8 @@ const Login = ({ setIsAuthenticated, setUsername }) => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     if (!recaptchaToken) {
       alert("Please complete the reCAPTCHA");
-   
     } else {
       try {
         const settings = {
@@ -31,6 +29,7 @@ const Login = ({ setIsAuthenticated, setUsername }) => {
           localStorage.setItem("accessToken", userData.accessToken);
           localStorage.setItem("refreshToken", userData.refreshToken);
           localStorage.setItem("username", userData.username);
+          localStorage.setItem("role", userData.role); // donde newUserData.role es el rol del usuario
 
           setIsAuthenticated(true);
           setUsername(userData.username);
@@ -55,7 +54,6 @@ const Login = ({ setIsAuthenticated, setUsername }) => {
           onChange={(e) => setLocalUsername(e.target.value)}
           required
         />
-
         <label>Password</label>
         <input
           type="password"
@@ -64,7 +62,7 @@ const Login = ({ setIsAuthenticated, setUsername }) => {
           required
         />
 
-        <ReCAPTCHA
+        <ReCAPTCHA className="recaptcha"
           sitekey="6Le33_YpAAAAAJfZFlSijhsa70YWxT2beWXENQq8"
           onChange={(token) => setRecaptchaToken(token)}
         />

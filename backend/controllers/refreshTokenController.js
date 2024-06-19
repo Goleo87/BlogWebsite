@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 
-export function refreshTokens(req, res, next) {
+
+export function refreshTokens(req, res,) {
   // If the user has included a valid refresh token in their request
   // Generate a new access token and a new refresh token, and send back in the response
 

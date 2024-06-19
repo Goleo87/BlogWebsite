@@ -12,11 +12,11 @@ router.use(authenticateToken)
 // GET http://localhost:5000/users/:id
 router.get("/:id", getUserData)
 
-// PATCH http://localhost:5000/users/:id/articles
-router.patch("/:id/articles", checkValues(["id"]), addNewArticle)
+// PATCH http://localhost:5000/users/:id/users
+router.patch("/:id/users", checkValues(["id"]), addNewArticle)
 
-// DELETE http://localhost:5000/users/:id
-router.delete("/:id", authorizeRole ("admin"), deleteUser)
+// DELETE http://localhost:5000/users/delete/:id
+router.route("/delete/:id").delete(authenticateToken, authorizeRole, deleteUser)
 
 
 export default router;

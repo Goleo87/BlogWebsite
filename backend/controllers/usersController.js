@@ -53,10 +53,10 @@ export async function addNewArticle(req, res, next) {
         runValidators: true
       }
 
-      // Update the user document with the bookId received in the req body
+      // Update the user document with the ArticleId received in the req body
       const updatedUser = await User.findByIdAndUpdate(req.params.id, {$push: {articles: ArticleId}}, options);
   
-      // Populate the user document's "books" array before sending the server response
+      // Populate the user document's "Articles" array before sending the server response
       await updatedUser.populate("articles", {
         _id: 1,
         title: 1,

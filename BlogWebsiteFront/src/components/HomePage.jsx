@@ -1,3 +1,4 @@
+// HomePage.jsx
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -33,14 +34,13 @@ const HomePage = ({ isAuthenticated }) => {
               {post.image && <img src={`http://localhost:5000/${post.image}`} alt="Post" className="post-image" />}
             </div>
             <p>{post.content}</p>
-            <p>Posted by: {post.user.username}</p>
-            <p>Posted at: {new Date(post.createdAt).toLocaleString()}</p>
-            <p>Replies: {post.replies.length}</p>
+            <div className="post-meta">
+            <p>Posted by: {post.user.username} at:{new Date(post.createdAt).toLocaleString()}</p>
+            </div>
             {isAuthenticated && (
               <>
                 <Link to={`/edit-post/${post._id}`} className="edit-button">Edit</Link>
-                <button className="delete-button" >Delete</button>
-                
+                <Link to={`/delete-post/${post._id}`} className="delete-button">Delete</Link>
               </>
             )}
           </div>
@@ -59,6 +59,7 @@ const HomePage = ({ isAuthenticated }) => {
 };
 
 export default HomePage;
+
 
 
 

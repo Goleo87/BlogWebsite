@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 
 
-function Register ({onClick, setUserId}) {
+function Register ({setUserId}) {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -29,6 +29,9 @@ function Register ({onClick, setUserId}) {
       setUserId(newUserData.id); // Ensure setUserId is defined and passed correctly
 
       alert("Registration successful!");
+      setIsAuthenticated(true);
+          setUsername(userData.username);
+          navigate("/")
     } else {
       const { error } = await response.json();
       throw new Error(error.message);
@@ -53,7 +56,7 @@ function Register ({onClick, setUserId}) {
         <label htmlFor="password">Password*</label>
         <input type="password" id="password" name="password" value={password} onChange={e => setPassword(e.target.value)} />
       
-        <ReCAPTCHA
+        <ReCAPTCHA className='recaptcha'
           sitekey="6Le33_YpAAAAAJfZFlSijhsa70YWxT2beWXENQq8"
           onChange={(token) => setRecaptchaToken(token)}
         />
