@@ -25,7 +25,7 @@ const PostCreate = () => {
 
       if (response.ok) {
         alert('Post created successfully');
-        navigate('/dashboard');
+        navigate('/');
       } else {
         throw new Error('Post creation failed');
       }

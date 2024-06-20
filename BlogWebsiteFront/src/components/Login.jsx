@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 
 const Login = ({ setIsAuthenticated, setUsername }) => {
-  const [username, setLocalUsername] = useState("");
+  const [localUsername, setLocalUsername] = useState("");
   const [password, setPassword] = useState("");
   const [recaptchaToken, setRecaptchaToken] = useState(null);
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const Login = ({ setIsAuthenticated, setUsername }) => {
       try {
         const settings = {
           method: "POST",
-          body: JSON.stringify({ username, password, recaptchaToken }),
+          body: JSON.stringify({ username: localUsername, password, recaptchaToken }),
           headers: {
             "Content-Type": "application/json",
           },
@@ -26,10 +26,11 @@ const Login = ({ setIsAuthenticated, setUsername }) => {
 
         if (response.ok) {
           const userData = await response.json();
-          localStorage.setItem("accessToken", userData.accessToken);
+          localStorage.setItem("jwt", userData.accessToken);
           localStorage.setItem("refreshToken", userData.refreshToken);
           localStorage.setItem("username", userData.username);
-          localStorage.setItem("role", userData.role); // donde newUserData.role es el rol del usuario
+          localStorage.setItem("userId", userData.userId); // Almacena el ID del usuario
+          localStorage.setItem("role", userData.role);
 
           setIsAuthenticated(true);
           setUsername(userData.username);
@@ -50,7 +51,7 @@ const Login = ({ setIsAuthenticated, setUsername }) => {
         <input
           type="text"
           name="username"
-          value={username}
+          value={localUsername}
           onChange={(e) => setLocalUsername(e.target.value)}
           required
         />
@@ -62,7 +63,8 @@ const Login = ({ setIsAuthenticated, setUsername }) => {
           required
         />
 
-        <ReCAPTCHA className="recaptcha"
+        <ReCAPTCHA
+          className="recaptcha"
           sitekey="6Le33_YpAAAAAJfZFlSijhsa70YWxT2beWXENQq8"
           onChange={(token) => setRecaptchaToken(token)}
         />
@@ -73,3 +75,4 @@ const Login = ({ setIsAuthenticated, setUsername }) => {
 };
 
 export default Login;
+

@@ -1,4 +1,3 @@
-// HomePage.jsx
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -35,7 +34,7 @@ const HomePage = ({ isAuthenticated }) => {
             </div>
             <p>{post.content}</p>
             <div className="post-meta">
-            <p>Posted by: {post.user.username} at:{new Date(post.createdAt).toLocaleString()}</p>
+              <p>Posted by: {post.user.username} at: {new Date(post.createdAt).toLocaleString()}</p>
             </div>
             {isAuthenticated && (
               <>
@@ -59,6 +58,7 @@ const HomePage = ({ isAuthenticated }) => {
 };
 
 export default HomePage;
+
 
 
 

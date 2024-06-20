@@ -11,7 +11,7 @@ const NavBar = ({ isAuthenticated, username, onLogout }) => {
         <Link to="/" className="navbar-title">WebDev</Link>
         {isAuthenticated ? (
           <div className="navbar-right">
-            <span className="welcome-msg">Welcome back, {username}!</span>
+            <span className="welcome-msg">Welcome {username}</span>
             <button className="navbar-button" onClick={onLogout}>Logout</button>
           </div>
         ) : (

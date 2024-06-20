@@ -10,9 +10,11 @@ import {
 } from "../controllers/postController.js";
 
 const router = express.Router();
+
 const upload = multer({ dest: "uploads/" });
 
 router.post("/", [authenticateToken, upload.single("image"), createPost]);
+
 router.patch("/:id", [authenticateToken, upload.single("image"), updatePost]);
 
 router.delete("/:id", authenticateToken, deletePost);

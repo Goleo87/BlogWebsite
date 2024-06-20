@@ -1,4 +1,4 @@
-// App.jsx
+// src/App.jsx
 import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
@@ -79,6 +79,7 @@ const App = () => {
             <Register
               setUserId={setUserId}
               setIsAuthenticated={setIsAuthenticated}
+              setUsername={setUsername}
             />
           }
         />
@@ -99,3 +100,5 @@ const App = () => {
 };
 
 export default App;
+
+

@@ -22,9 +22,9 @@ async function createUser(req, res, next) {
 
     const newUser = await User.create({ email, username, password: hashedPassword });
 
-    const newToken = jwt.sign({ id: newUser.id }, process.env.SECRET_KEY, { expiresIn: "30m" });
+    const newToken = jwt.sign({ id: newUser.id, username: newUser.username }, process.env.SECRET_KEY, { expiresIn: "1h" });
 
-    res.status(201).json({ id: newUser.id, token: newToken });
+    res.status(201).json({ id: newUser.id, username: newUser.username, token: newToken  });
   } catch (err) {
     if (err.name === "ValidationError") {
       const errMsg = Object.values(err.errors)[0].message;
