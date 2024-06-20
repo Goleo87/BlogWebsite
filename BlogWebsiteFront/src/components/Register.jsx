@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
+import defaultProfileImage from '../assets/default-profile.png'; // Importar imagen por defecto
 
 function Register({ setUserId, setUsername, setIsAuthenticated }) {
   const [email, setEmail] = useState('');
-  const [username, setUsernameLocal] = useState(''); // Renombrado para evitar conflicto
+  const [username, setUsernameLocal] = useState('');
   const [password, setPassword] = useState('');
   const [recaptchaToken, setRecaptchaToken] = useState(null);
   const navigate = useNavigate();
@@ -16,28 +17,31 @@ function Register({ setUserId, setUsername, setIsAuthenticated }) {
       return;
     }
     try {
-      const settings = {
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('username', username);
+      formData.append('password', password);
+      formData.append('profileImage', defaultProfileImage); // Imagen por defecto
+
+      const response = await fetch("http://localhost:5000/register", {
         method: "POST",
-        body: JSON.stringify({ email, username, password, recaptchaToken }),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }
-      const response = await fetch("http://localhost:5000/register", settings);
+        body: formData
+      });
 
       if (response.ok) {
         const newUserData = await response.json();
 
-        // Almacena el token y establece el userId y username
-        localStorage.setItem("jwt", newUserData.token);
-        localStorage.setItem("username", newUserData.username); // Almacena el nombre de usuario
-        localStorage.setItem("userId", newUserData.id); // Almacena el ID del usuario
+        localStorage.setItem("accessToken", newUserData.accessToken);
+        localStorage.setItem("username", newUserData.username);
+        localStorage.setItem("userId", newUserData.id);
+        localStorage.setItem("userImage", newUserData.profileImage || defaultProfileImage); // Almacena la imagen por defecto si no hay una imagen personalizada
+
         setUserId(newUserData.id);
         setUsername(newUserData.username);
         setIsAuthenticated(true);
 
         alert("Registration successful!");
-        navigate("/"); // Redirige a la página de inicio
+        navigate("/"); // Redirige a la página principal después del registro
       } else {
         const { error } = await response.json();
         throw new Error(error.message);
@@ -56,7 +60,7 @@ function Register({ setUserId, setUsername, setIsAuthenticated }) {
           id="email"
           name="email"
           value={email}
-          onChange={e => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
         />
 
         <label htmlFor="username">Username*</label>
@@ -65,7 +69,7 @@ function Register({ setUserId, setUsername, setIsAuthenticated }) {
           id="username"
           name="username"
           value={username}
-          onChange={e => setUsernameLocal(e.target.value)}
+          onChange={(e) => setUsernameLocal(e.target.value)}
         />
 
         <label htmlFor="password">Password*</label>
@@ -74,7 +78,7 @@ function Register({ setUserId, setUsername, setIsAuthenticated }) {
           id="password"
           name="password"
           value={password}
-          onChange={e => setPassword(e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
         />
 
         <ReCAPTCHA
@@ -89,5 +93,7 @@ function Register({ setUserId, setUsername, setIsAuthenticated }) {
 }
 
 export default Register;
+
+
 
 

@@ -12,14 +12,16 @@ const PostCreate = () => {
     const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
-    formData.append('image', image);
+    if (image) {
+      formData.append('image', image);
+    }
 
     try {
       const response = await fetch('http://localhost:5000/posts', {
         method: 'POST',
         body: formData,
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
         }
       });
 
@@ -31,6 +33,7 @@ const PostCreate = () => {
       }
     } catch (error) {
       console.error('Post creation failed', error);
+      alert('Post creation failed. Please try again.');
     }
   };
 
@@ -56,6 +59,7 @@ const PostCreate = () => {
 };
 
 export default PostCreate;
+
 
 
 

@@ -1,22 +1,20 @@
-import express from "express";
-import authenticateToken from "../middleware/authenticateToken.js";
-import { addNewArticle, getUserData, deleteUser } from "../controllers/usersController.js";
-import authorizeRole from "../middleware/authorizeRole.js";
-import checkValues from "../validators/checkValues.js";
+import express from 'express';
+import {  updateUser, deleteUser, getUserId } from '../controllers/usersController.js';
+import multer from 'multer';
 
 const router = express.Router();
 
-// Use authentication middleware to protect all /users routes
-router.use(authenticateToken)
+const upload = multer({ dest: 'public/' });
 
 // GET http://localhost:5000/users/:id
-router.get("/:id", getUserData)
+router.get('/:id', getUserId);
 
-// PATCH http://localhost:5000/users/:id/users
-router.patch("/:id/users", checkValues(["id"]), addNewArticle)
+// PATCH http://localhost:5000/users/:id
+router.patch('/:id', upload.single('profileImage'), updateUser);
 
-// DELETE http://localhost:5000/users/delete/:id
-router.route("/delete/:id").delete(authenticateToken, authorizeRole, deleteUser)
-
+// DELETE http://localhost:5000/users/:id
+router.delete('/:id', deleteUser);
 
 export default router;
+
+

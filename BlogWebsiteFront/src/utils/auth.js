@@ -1,46 +1,36 @@
-// src/utils/auth.js
+export const isTokenValid = (token) => {
+  if (!token) return false;
 
-export function isTokenValid(token) {
+  const payload = JSON.parse(atob(token.split(".")[1]));
+  const currentTime = Date.now() / 1000;
+
+  return payload.exp > currentTime;
+};
+
+export const refreshToken = async () => {
+  const refreshToken = localStorage.getItem("refreshToken");
+
   try {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split('')
-        .map(function (c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        })
-        .join('')
-    );
-
-    const { exp } = JSON.parse(jsonPayload);
-
-    if (typeof exp === 'number') {
-      return Date.now() < exp * 1000;
-    }
-    return false;
-  } catch (e) {
-    console.error("Invalid token:", e);
-    return false;
-  }
-}
-
-export async function refreshToken() {
-  try {
-    const response = await fetch('http://localhost:5000/refresh-token', {
-      method: 'POST',
-      credentials: 'include',
+    const response = await fetch("http://localhost:5000/token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token: refreshToken }),
     });
 
     if (response.ok) {
       const data = await response.json();
-      localStorage.setItem('jwt', data.token);
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("userImage", data.userImage);
       return true;
     } else {
-      throw new Error('Failed to refresh token');
+      return false;
     }
   } catch (error) {
-    console.error(error);
+    console.error("Token refresh failed", error);
     return false;
   }
-}
+};
+
+

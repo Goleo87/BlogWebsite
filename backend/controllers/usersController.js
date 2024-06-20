@@ -1,97 +1,56 @@
-import createError from "http-errors";
-import User from "../models/User.js";
+import createError from 'http-errors';
+import User from '../models/User.js';
+import bcrypt from 'bcrypt';
 
-export async function getUserData(req, res, next) {
-  let foundUser;
-
-  // Try to find the user in the "users" collection based on the :id parameter
+export const getUserId = async (req, res, next) => {
+  const { id } = req.params;
   try {
-    foundUser = await User.findById(req.params.id);
-  } catch {
-    return next(createError(500, "Server error"));
-  }
-
-  // If the user exists in the "users" collection
-  if (foundUser) {
-    try {
-      await foundUser.populate("articles", {
-        _id: 1,
-        title: 1,
-        deletedAt: 1
-      })
-
-      // Send the server response
-      res.status(201).json({
-        username: foundUser.username,
-        articles: foundUser.articles.filter(article => article.deletedAt === null)
-      })
-    } catch {
-      next(createError(500, "Server error"));
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
     }
-  } else {
-    next(createError(404, "User not found"));
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
   }
-}
+  next();
+};
 
-export async function addNewArticle(req, res, next) {
-  const { ArticleId } = req.body;
-
-  let foundUser;
-
-  // Try to find the user in the "users" collection based on the :id parameter
+export async function updateUser(req, res, next) {
+  const { id } = req.params;
   try {
-    foundUser = await User.findById(req.params.id);
-  } catch {
-    return next(createError(500, "Server error"));
-  }
-
-  // If the user exists in the "users" collection
-  if (foundUser) {
-    try {
-      const options = {
-        new: true,
-        runValidators: true
-      }
-
-      // Update the user document with the ArticleId received in the req body
-      const updatedUser = await User.findByIdAndUpdate(req.params.id, {$push: {articles: ArticleId}}, options);
-  
-      // Populate the user document's "Articles" array before sending the server response
-      await updatedUser.populate("articles", {
-        _id: 1,
-        title: 1,
-        deletedAt: 1
-      })
-
-      // Send the server response
-      res.status(201).json({
-        id: updatedUser._id,
-        username: updatedUser.username,
-        articles: updatedUser.articles.filter(article => article.deletedAt === null)
-      })
-    } catch {
-      next(createError(500, "Server error"));
+    let updateData = {};
+    if (req.body.username) updateData.username = req.body.username;
+    if (req.body.email) updateData.email = req.body.email;
+    if (req.body.password) {
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+      updateData.password = hashedPassword;
     }
+    if (req.file) updateData.profileImage = req.file.path;
 
-  } else {
-    next(createError(404, "User not found"));
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
+    if (!updatedUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
   }
-}
+  next();
+};
 
-// Function to "hard" delete a "user" document
-export async function deleteUser(req, res, next) {
+export async function deleteUser(req, res) {
+  const { id } = req.params;
   try {
-    const deletedUser = await User.findByIdAndDelete(req.params.id);
-
-    if (deletedUser) {
-      res.json({
-        message: "User deleted successfully"
-      })
-    } else {
-      next(createError(404, "User not found"));
+    const deletedUser = await User.findByIdAndDelete(id);
+    if (!deletedUser) {
+      return res.status(404).json({ error: 'User not found' });
     }
-
-  } catch {
-    next(createError(500, "Server error"));
+    res.status(200).json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
   }
-}
+};

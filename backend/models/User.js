@@ -6,7 +6,6 @@ const { Schema, model } = mongoose;
 
 const userSchema = new Schema({
   username: {
-    
     type: String,
     required: true,
     unique: true,
@@ -51,4 +50,5 @@ userSchema.pre('save', async function (next) {
 const User = model('User', userSchema);
 
 export default User;
+
 

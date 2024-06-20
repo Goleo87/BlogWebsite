@@ -1,9 +1,9 @@
-// NavBar.jsx
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import defaultProfileImage from '../assets/default-profile.png'; // Importar imagen por defecto
 
-const NavBar = ({ isAuthenticated, username, onLogout }) => {
-  useNavigate();
+const NavBar = ({ isAuthenticated, username, onLogout, userImage }) => {
+  const navigate = useNavigate();
 
   return (
     <div className="navbar">
@@ -11,7 +11,14 @@ const NavBar = ({ isAuthenticated, username, onLogout }) => {
         <Link to="/" className="navbar-title">WebDev</Link>
         {isAuthenticated ? (
           <div className="navbar-right">
-            <span className="welcome-msg">Welcome {username}</span>
+            <Link to="/user-profile" className="navbar-profile-link">
+              <img
+                src={userImage || defaultProfileImage}
+                alt="User"
+                className="navbar-profile-image"
+              />
+              <span className="welcome-msg">Welcome {username}</span>
+            </Link>
             <button className="navbar-button" onClick={onLogout}>Logout</button>
           </div>
         ) : (
@@ -26,6 +33,3 @@ const NavBar = ({ isAuthenticated, username, onLogout }) => {
 };
 
 export default NavBar;
-
-
-

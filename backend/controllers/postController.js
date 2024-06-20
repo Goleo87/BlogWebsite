@@ -1,6 +1,7 @@
 import Post from '../models/Post.js';
 import User from '../models/User.js';
 
+
 export const createPost = async (req, res) => {
   const { title, content } = req.body;
   const image = req.file ? req.file.path : null;
@@ -86,20 +87,28 @@ export const updatePost = async (req, res, next) => {
 
 
 
-export const deletePost = async (req, res, next) => {
+export const deletePost = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const { id } = req.params;
-    
-    const post = await Post.findByIdAndDelete(id);
+    const post = await Post.findById(id);
     if (!post) {
       return res.status(404).json({ message: 'Post not found' });
     }
-    res.status(200).json({ message: 'Post deleted successfully' });
+
+    // Verificar si el usuario es admin o el autor del post
+    if (req.user.role === 'admin' || post.user.toString() === req.user.id) {
+      await Post.findByIdAndDelete(id);
+      res.json({ message: 'Post deleted successfully' });
+    } else {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
   } catch (error) {
-    console.error('Error deleting post:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
   }
-  next();
-};
+
+}
+
 
 

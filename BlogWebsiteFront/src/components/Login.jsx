@@ -3,20 +3,22 @@ import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 
 const Login = ({ setIsAuthenticated, setUsername }) => {
-  const [localUsername, setLocalUsername] = useState("");
+  const [username, setLocalUsername] = useState("");
   const [password, setPassword] = useState("");
   const [recaptchaToken, setRecaptchaToken] = useState(null);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     if (!recaptchaToken) {
       alert("Please complete the reCAPTCHA");
+   
     } else {
       try {
         const settings = {
           method: "POST",
-          body: JSON.stringify({ username: localUsername, password, recaptchaToken }),
+          body: JSON.stringify({ username, password, recaptchaToken }),
           headers: {
             "Content-Type": "application/json",
           },
@@ -26,15 +28,13 @@ const Login = ({ setIsAuthenticated, setUsername }) => {
 
         if (response.ok) {
           const userData = await response.json();
-          localStorage.setItem("jwt", userData.accessToken);
+          localStorage.setItem("accessToken", userData.accessToken);
           localStorage.setItem("refreshToken", userData.refreshToken);
           localStorage.setItem("username", userData.username);
-          localStorage.setItem("userId", userData.userId); // Almacena el ID del usuario
-          localStorage.setItem("role", userData.role);
 
           setIsAuthenticated(true);
           setUsername(userData.username);
-          navigate("/"); // Redirect to the main page
+          navigate("/"); 
         } else {
           throw new Error("Login unsuccessful - please try again");
         }
@@ -51,10 +51,11 @@ const Login = ({ setIsAuthenticated, setUsername }) => {
         <input
           type="text"
           name="username"
-          value={localUsername}
+          value={username}
           onChange={(e) => setLocalUsername(e.target.value)}
           required
         />
+
         <label>Password</label>
         <input
           type="password"
@@ -64,7 +65,6 @@ const Login = ({ setIsAuthenticated, setUsername }) => {
         />
 
         <ReCAPTCHA
-          className="recaptcha"
           sitekey="6Le33_YpAAAAAJfZFlSijhsa70YWxT2beWXENQq8"
           onChange={(token) => setRecaptchaToken(token)}
         />
@@ -75,4 +75,3 @@ const Login = ({ setIsAuthenticated, setUsername }) => {
 };
 
 export default Login;
-

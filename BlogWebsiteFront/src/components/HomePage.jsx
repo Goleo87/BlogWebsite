@@ -8,7 +8,11 @@ const HomePage = ({ isAuthenticated }) => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/posts');
+        const response = await fetch('http://localhost:5000/posts', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+          }
+        });
         if (response.ok) {
           const posts = await response.json();
           setPosts(posts);
@@ -23,6 +27,25 @@ const HomePage = ({ isAuthenticated }) => {
     fetchPosts();
   }, []);
 
+  const handleDeletePost = async (postId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/posts/${postId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      });
+
+      if (response.ok) {
+        setPosts(posts.filter(post => post._id !== postId));
+      } else {
+        throw new Error('Failed to delete post');
+      }
+    } catch (error) {
+      console.error('Post deletion failed', error);
+    }
+  };
+
   return (
     <div className="container">
       <div className="post-list">
@@ -33,14 +56,13 @@ const HomePage = ({ isAuthenticated }) => {
               {post.image && <img src={`http://localhost:5000/${post.image}`} alt="Post" className="post-image" />}
             </div>
             <p>{post.content}</p>
-            <div className="post-meta">
-              <p>Posted by: {post.user.username} at: {new Date(post.createdAt).toLocaleString()}</p>
-            </div>
+            <p>Posted by: {post.user.username}</p>
+            <p>Posted at: {new Date(post.createdAt).toLocaleString()}</p>
             {isAuthenticated && (
-              <>
+              <div className="post-actions">
                 <Link to={`/edit-post/${post._id}`} className="edit-button">Edit</Link>
-                <Link to={`/delete-post/${post._id}`} className="delete-button">Delete</Link>
-              </>
+                <button className="delete-button" onClick={() => handleDeletePost(post._id)}>Delete</button>
+              </div>
             )}
           </div>
         ))}
@@ -58,7 +80,6 @@ const HomePage = ({ isAuthenticated }) => {
 };
 
 export default HomePage;
-
 
 
 
