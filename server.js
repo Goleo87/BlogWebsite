@@ -3,7 +3,6 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import dotenv from 'dotenv';
 import connect from './libs/database.js';
 import postRoutes from './routes/post.js';
 import registerUser from './routes/register.js';
@@ -13,7 +12,7 @@ import globalErrorHandler from './middleware/globalErrorHandler.js';
 import authenticateToken from './middleware/authenticateToken.js';
 import { loginUser } from './controllers/loginController.js';
 
-dotenv.config(); // Load environment variables from .env file
+
 
 await connect();
 
