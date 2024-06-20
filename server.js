@@ -3,6 +3,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import connect from './libs/database.js';
 import postRoutes from './routes/post.js';
 import registerUser from './routes/register.js';
 import UsersRouter from './routes/users.js';
@@ -13,20 +14,13 @@ import { loginUser } from './controllers/loginController.js';
 
 
 
+await connect();
+
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json());
-
-//* Store your own MongoDB connection string in .env file!
-try {
-    await mongoose.connect(process.env.MONGODB_CONNECTION_STRING);
-    console.log("Database is connected! 🐱");
-  } catch (error) {
-    console.log(error.message);
-    console.log("Database connection failed... :(");
-  }
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
