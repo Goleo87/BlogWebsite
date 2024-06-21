@@ -4,7 +4,7 @@ import multer from 'multer';
 
 const router = express.Router();
 
-const upload = multer({ dest: 'public/' });
+const upload = multer({ dest: 'uploads/' });
 
 // GET http://localhost:5000/users/:id
 router.get('/:id', getUserId);
