@@ -23,7 +23,7 @@ const UserProfile = ({ setIsAuthenticated, setUsername, setUserId, setUserImage 
     if (id && accessToken) {
       const fetchUserData = async () => {
         try {
-          const response = await fetch(`http://localhost:5000/users/${id}`, {
+          const response = await fetch(`${import.meta.env.VITE_API}/users/${id}`, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
@@ -60,7 +60,7 @@ const UserProfile = ({ setIsAuthenticated, setUsername, setUserId, setUserImage 
       if (password) formData.append('password', password);
       if (profileImage) formData.append('profileImage', profileImage);
 
-      const response = await fetch(`http://localhost:5000/users/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API}/users/${id}`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -87,7 +87,7 @@ const UserProfile = ({ setIsAuthenticated, setUsername, setUserId, setUserImage 
       return;
     }
     try {
-      const response = await fetch(`http://localhost:5000/users/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API}/users/${id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${accessToken}`,

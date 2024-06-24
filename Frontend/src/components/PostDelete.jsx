@@ -16,7 +16,7 @@ const PostDelete = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/posts/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API}/posts/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`

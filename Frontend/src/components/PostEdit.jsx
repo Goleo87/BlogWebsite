@@ -27,7 +27,7 @@ const PostEdit = ({ userId }) => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/posts/${id}`, {
+        const response = await fetch(`${import.meta.env.VITE_API}/posts/${id}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -66,7 +66,7 @@ const PostEdit = ({ userId }) => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/posts/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API}/posts/${id}`, {
         method: "PATCH",
         body: formData,
         headers: {
@@ -97,7 +97,7 @@ const PostEdit = ({ userId }) => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/posts/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API}/posts/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${accessToken}`,

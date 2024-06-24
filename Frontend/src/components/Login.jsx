@@ -23,8 +23,7 @@ const Login = ({ setIsAuthenticated, setUsername }) => {
             "Content-Type": "application/json",
           },
         };
-
-        const response = await fetch("http://localhost:5000/login", settings);
+        const response = await fetch(`${import.meta.env.VITE_API}/login`, settings);
 
         if (response.ok) {
           const userData = await response.json();

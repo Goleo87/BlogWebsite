@@ -23,7 +23,7 @@ function Register({ setUserId, setUsername, setIsAuthenticated }) {
       formData.append('password', password);
       formData.append('profileImage', defaultProfileImage); // Imagen por defecto
 
-      const response = await fetch("http://localhost:5000/register", {
+      const response = await fetch(`${import.meta.env.VITE_API}/register`, {
         method: "POST",
         body: formData
       });

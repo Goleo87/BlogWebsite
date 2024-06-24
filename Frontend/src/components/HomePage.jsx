@@ -8,7 +8,7 @@ const HomePage = ({ isAuthenticated }) => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/posts', {
+        const response = await fetch(`${import.meta.env.VITE_API}/posts`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
           }
